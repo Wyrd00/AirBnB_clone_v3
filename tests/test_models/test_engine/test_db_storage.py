@@ -121,3 +121,31 @@ class test_DBStorage(unittest.TestCase):
             Test to check if storage is an instance for DBStorage
         '''
         self.assertTrue(isinstance(storage, DBStorage))
+
+    def test_db_storage_get(self):
+        '''
+            Test to check if instance gotten for DBStorage
+        '''
+        new_state = State(name="NewYork")
+        storage.new(new_state)
+        new_s_id = new_state.id
+        storage.save()
+        self.assertIsNone(storage.get("State"))
+        obj = storage.get("State", fake_id)
+        self.assertIsNone(obj)
+        obj = storage.get("State", new_s_id)
+        print(obj)
+        self.assertTrue(isinstance(obj, State))
+        self.assertEquals(obj.name, "NewYork")
+        self.assertEquals(obj.id, new_s_id)
+
+    def test_db_storage_count(self):
+        '''
+            Test to check total count of objs in DBStorage
+        '''
+        all_count = storage.count()
+        self.assertIsInstance(all_count, int)
+        cls_count = storage.count("State")
+        self.assertIsInstance(cls_count, int)
+        self.assertGreaterEqual(all_count, cls_count)
+        print(all_count, cls_count)
