@@ -128,3 +128,32 @@ class testFileStorage(unittest.TestCase):
             Test State model in Filestorage
         '''
         self.assertTrue(isinstance(storage, FileStorage))
+
+    def test_db_storage_get(self):
+        '''
+            Test to check if instance gotten for DBStorage
+        '''
+        new_state = State(name="NewYork")
+        self.storage.new(new_state)
+        new_s_id = new_state.id
+        self.storage.save()
+        with self.assertRaises(TypeError):
+            self.storage.get("State")
+        fake_id = 0000
+        obj1 = self.storage.get("State", fake_id)
+        self.assertIsNone(obj1)
+        obj = storage.get("State", new_s_id)
+        print(storage.get("State", new_s_id))
+        self.assertEquals(obj.__class__.__name__, "State")
+        self.assertEquals(obj.name, "NewYork")
+        self.assertEquals(obj.id, new_s_id)
+
+    def test_db_storage_count(self):
+        '''
+            Test to check total count of objs in DBStorage
+        '''
+        all_count = self.storage.count()
+        self.assertIsInstance(all_count, int)
+        cls_count = self.storage.count("State")
+        self.assertIsInstance(cls_count, int)
+        self.assertGreaterEqual(all_count, cls_count)
