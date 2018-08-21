@@ -86,7 +86,9 @@ class FileStorage:
         result = None
 
         try:
-            result = [v for v in self.__objects.values() if v.id == id]
+            for v in self.__objects.values():
+                if v.id == id:
+                    result = v
         except:
             pass
 

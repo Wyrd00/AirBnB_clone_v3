@@ -96,7 +96,9 @@ class DBStorage:
         result = None
         try:
             objs = self.__session.query(models.classes[cls]).all()
-            result = [obj for obj in objs if obj.id == id]
+            for obj in objs:
+                if obj.id == id:
+                    result = obj
         except:
             pass
         return result
