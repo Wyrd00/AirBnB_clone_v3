@@ -129,7 +129,7 @@ class testFileStorage(unittest.TestCase):
         '''
         self.assertTrue(isinstance(storage, FileStorage))
 
-    def test_db_storage_get(self):
+    def test_fs_storage_get(self):
         '''
             Test to check if instance gotten for DBStorage
         '''
@@ -148,7 +148,7 @@ class testFileStorage(unittest.TestCase):
         self.assertEquals(obj.name, "NewYork")
         self.assertEquals(obj.id, new_s_id)
 
-    def test_db_storage_count(self):
+    def test_fs_storage_count(self):
         '''
             Test to check total count of objs in DBStorage
         '''
