@@ -94,7 +94,6 @@ class DBStorage:
             Retrieve an obj w/class name and id
         '''
         result = None
-
         try:
             objs = self.__session.query(models.classes[cls]).all()
             result = [obj for obj in objs if obj.id == id]

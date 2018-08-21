@@ -86,10 +86,7 @@ class FileStorage:
         result = None
 
         try:
-            objs = models.storage.all(cls)
-            for obj in objs:
-                if obj.id == id:
-                    result = obj
+            result = [v for v in self.__objects.values() if v.id == id]
         except:
             pass
 
