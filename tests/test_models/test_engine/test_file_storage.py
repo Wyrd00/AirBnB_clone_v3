@@ -143,10 +143,9 @@ class testFileStorage(unittest.TestCase):
         obj1 = self.storage.get("State", fake_id)
         self.assertIsNone(obj1)
         obj = storage.get("State", new_s_id)
-        print(storage.get("State", new_s_id))
-        self.assertEquals(obj.__class__.__name__, "State")
-        self.assertEquals(obj.name, "NewYork")
-        self.assertEquals(obj.id, new_s_id)
+        self.assertEqual(obj.__class__.__name__, "State")
+        self.assertEqual(obj.name, "NewYork")
+        self.assertEqual(obj.id, new_s_id)
 
     def test_fs_storage_count(self):
         '''
