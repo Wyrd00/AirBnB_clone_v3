@@ -91,19 +91,71 @@ class Test_State_API(unittest.TestCase):
 
     def test_create_id(self):
         """test create HTTP request"""
-        pass
+        attr = {"name": "NY", "id": "888"}
+        new_instance = State(**attr)
+        new_instance.save()
+        response = self.app.post('{}'.format(self.basepath),
+                                 content_type="application/json",
+                                 data=json.dumps(attr))
+        response_to_dict = json.loads(str(response.data, encoding="utf-8"))
+        self.assertEqual(response.status_code, 201)
+        obj = storage.get("State", "888")
+        self.assertIsNotNone(obj)
+        new_instance.delete()
 
-    def test_create_id_fail(self):
+    def test_create_fail_nojson(self):
         """test create HTTP request"""
-        pass
+        attr = {"name": "NY", "id": "888"}
+        response = self.app.post('{}'.format(self.basepath))
+        response_to_dict = json.loads(str(response.data, encoding="utf-8"))
+        self.assertEqual(response.status_code, 400)
+        self.assertIn("error", response_to_dict)
+        self.assertIn("Not a JSON", response_to_dict["error"])
+        obj = storage.get("State", "888")
+        self.assertIsNone(obj)
+
+    def test_create_fail_noname(self):
+        """test create HTTP request"""
+        attr = {"id": "777"}
+        response = self.app.post('{}'.format(self.basepath),
+                                 content_type="application/json",
+                                 data=json.dumps(attr))
+        response_to_dict = json.loads(str(response.data, encoding="utf-8"))
+        self.assertEqual(response.status_code, 400)
+        self.assertIn("error", response_to_dict)
+        self.assertIn("Missing name", response_to_dict["error"])
+        obj = storage.get("State", "777")
+        self.assertIsNone(obj)
 
     def test_update_id(self):
         """test update HTTP request"""
-        pass
+        attr = {"name": "FarAway"}
+        new = State(**attr)
+        new.save()
+        new_attr = {"name": "FarFarAway"}
+        response = self.app.put('{}/{}'.format(self.basepath, new.id),
+                                 content_type="application/json",
+                                 data=json.dumps(new_attr))
+        response_to_dict = json.loads(str(response.data, encoding="utf-8"))
+        self.assertEqual(response.status_code, 200)
+        obj = storage.get("State", new.id)
+        self.assertEqual(obj.name, new_attr["name"])
+        new.delete()
 
-    def test_update_id_fail(self):
+    def test_update_id_fail_nojson(self):
         """test update HTTP request"""
-        pass
+        attr = {"name": "FarAway"}
+        new = State(**attr)
+        new.save()
+        new_attr = {"name": "FarFarAway"}
+        response = self.app.put('{}/{}'.format(self.basepath, new.id))
+        response_to_dict = json.loads(str(response.data, encoding="utf-8"))
+        self.assertEqual(response.status_code, 400)
+        self.assertIn("error", response_to_dict)
+        self.assertIn("Not a JSON", response_to_dict["error"])
+        obj = storage.get("State", new.id)
+        self.assertNotEqual(obj.name, new_attr["name"])
+        new.delete()
 
 
 if __name__ == "__main__":
