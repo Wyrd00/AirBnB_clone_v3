@@ -62,6 +62,10 @@ def create_review(place_id):
         abort(404)
     elif "text" not in request.get_json():
         return jsonify({"error": "Missing text"}), 400
+    elif "place_id" not in request.get_json():
+        return jsonify({"error": "Missing place_id"}), 400
+    elif storage.get("Place", request.get_json()["place_id"]) is None:
+        abort(404)
     else:
         obj_data = request.get_json()
         obj = Review(**obj_data)
