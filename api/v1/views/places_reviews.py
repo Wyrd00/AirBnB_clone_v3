@@ -52,13 +52,13 @@ def create_review(place_id):
     '''
         create new review obj through place association using POST
     '''
-    if storage.get("Place", "place_id") is None:
+    if storage.get("Place", place_id) is None:
         abort(404)
     elif not request.get_json():
         return jsonify({"error": "Not a JSON"}), 400
     elif "user_id" not in request.get_json():
         return jsonify({"error": "Missing user_id"}), 400
-    elif storage.get("User", request.json()["user_id"]) is None:
+    elif storage.get("User", request.get_json()["user_id"]) is None:
         abort(404)
     elif "text" not in request.get_json():
         return jsonify({"error": "Missing text"}), 400
