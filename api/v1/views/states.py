@@ -13,24 +13,28 @@ def get_state():
     state_list = [s.to_dict() for s in storage.all('State').values()]
     return jsonify(state_list)
 
+
 @app_views.route('/states/<state_id>', methods=['GET'], strict_slashes=False)
 def get_state_id(state_id):
     '''
         return state and its id using http verb GET
     '''
     state = storage.get("State", state_id)
-    if state == None:
+    if state is None:
         abort(404)
     return jsonify(state.to_dict())
 
 
-@app_views.route('/states/<state_id>', methods=['DELETE'], strict_slashes=False)
+@app_views.route(
+    '/states/<state_id>',
+    methods=['DELETE'],
+    strict_slashes=False)
 def delete_state(state_id):
     '''
         delete state obj given state_id
     '''
     state = storage.get("State", state_id)
-    if state == None:
+    if state is None:
         abort(404)
     state.delete()
     storage.save()
@@ -52,6 +56,7 @@ def create_state():
         obj.save()
         return jsonify(obj.to_dict()), 201
 
+
 @app_views.route('/states/<states_id>', methods=['PUT'], strict_slashes=False)
 def update_state(states_id):
     '''
@@ -59,9 +64,9 @@ def update_state(states_id):
     '''
     if not request.get_json():
         return jsonify({"error": "Not a JSON"}), 400
-    
+
     obj = storage.get("State", states_id)
-    if obj == None:
+    if obj is None:
         abort(404)
     obj_data = request.get_json()
     obj.name = obj_data['name']
