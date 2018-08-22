@@ -1,4 +1,7 @@
 #!/usr/bin/python3
+'''
+    RESTful API for class User
+'''
 from flask import Flask, jsonify, abort, request
 from api.v1.views import app_views
 from models import storage
@@ -20,7 +23,7 @@ def get_user_id(user_id):
         return user with given id using http verb GET
     '''
     user = storage.get("User", user_id)
-    if user == None:
+    if user is None:
         abort(404)
     return jsonify(user.to_dict())
 
@@ -31,7 +34,7 @@ def delete_user(user_id):
         delete user obj given user_id
     '''
     user = storage.get("User", user_id)
-    if user == None:
+    if user is None:
         abort(404)
     user.delete()
     storage.save()
@@ -64,7 +67,7 @@ def update_user(user_id):
     if not request.get_json():
         return jsonify({"error": "Not a JSON"}), 400
     obj = storage.get("User", user_id)
-    if obj == None:
+    if obj is None:
         abort(404)
     obj_data = request.get_json()
     ignore = ("id", "email", "created_at", "updated_at")
