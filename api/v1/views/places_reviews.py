@@ -64,7 +64,7 @@ def create_review(place_id):
         return jsonify({"error": "Missing text"}), 400
     else:
         obj_data = request.get_json()
-        obj = City(**obj_data)
+        obj = Review(**obj_data)
         obj.save()
         return jsonify(obj.to_dict()), 201
 
