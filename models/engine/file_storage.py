@@ -89,7 +89,7 @@ class FileStorage:
             for v in self.__objects.values():
                 if v.id == id:
                     result = v
-        except:
+        except BaseException:
             pass
 
         return result
@@ -100,7 +100,7 @@ class FileStorage:
         '''
         cls_counter = 0
 
-        if cls != None:
+        if cls is not None:
             for k in self.__objects.keys():
                 if cls in k:
                     cls_counter += 1
