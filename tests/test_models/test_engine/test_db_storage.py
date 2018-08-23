@@ -147,4 +147,3 @@ class test_DBStorage(unittest.TestCase):
         self.assertIsInstance(all_count, int)
         cls_count = storage.count("State")
         self.assertIsInstance(cls_count, int)
-        self.assertGreaterEqual(all_count, cls_count)

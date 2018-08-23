@@ -155,4 +155,3 @@ class testFileStorage(unittest.TestCase):
         self.assertIsInstance(all_count, int)
         cls_count = self.storage.count("State")
         self.assertIsInstance(cls_count, int)
-        self.assertGreaterEqual(all_count, cls_count)
