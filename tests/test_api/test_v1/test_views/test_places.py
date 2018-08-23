@@ -8,6 +8,7 @@ from api.v1.app import app
 from models import storage
 from models.place import Place
 from models.city import City
+from models.user import User
 import json
 
 
@@ -20,18 +21,18 @@ class Test_Place_API(unittest.TestCase):
         app.config['TESTING'] = True
         cls.app = app.test_client()
         cls.basepath = "api/v1"
-        attr = {"id": "01", "name": "San Francisco"}
-        city = City(**attr)
-        city.save()
-        attr2 = {"id": "00", "name": "Esera"}
-        user = User(**attr2)
-        user.save()
+        cls.attr = {"id": "01", "name": "San Francisco"}
+        cls.city = City(**cls.attr)
+        cls.city.save()
+        cls.attr2 = {"id": "00", "name": "Esera"}
+        cls.user = User(**cls.attr2)
+        cls.user.save()
 
     @classmethod
     def tearDownClass(cls):
         """teardown"""
-        city.delete()
-        user.delete()
+        cls.city.delete()
+        cls.user.delete()
 
     def test_get_place_by_city_id(self):
         """test get HTTP request"""
@@ -39,7 +40,7 @@ class Test_Place_API(unittest.TestCase):
         new = Place(**attr)
         new.save()
         response = self.app.get("{}/cities/{}/places".format(self.basepath,
-                                                             city.id))
+                                                             self.city.id))
         response_to_dict = json.load(str(response.data, encoding="utf8"))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response_to_dict['__class__'], "Place")
@@ -58,12 +59,12 @@ class Test_Place_API(unittest.TestCase):
         new.save()
         response = self.app.get('{}/places/{}'.format(self.basepath, new.id))
         self.assertEqual(response.status_code, 200)
-        new_instance.delete()
+        new.delete()
 
     def test_get_place_id_fail(self):
         """test get HTTP request"""
         response = self.app.get('{}/places/troll_id'.format(self.basepath))
-        response_to_dict = json.load(str(response.data, encoding="utf8"))
+        response_to_dict = json.load(str(response.data, encoding="utf-8"))
         self.assertEqual(response.status_code, 404)
         self.assertIn("error", response_to_dict)
         self.assertIn("Not found", response_to_dict["error"])
@@ -73,15 +74,15 @@ class Test_Place_API(unittest.TestCase):
         attr = {"name": "Unicorn Den"}
         new = Place(**attr)
         new.save()
-        response = self.app.delete('{}/places/{}'.format(self.basepath, 
+        response = self.app.delete('{}/places/{}'.format(self.basepath,
                                                          new.id))
-        response_to_dict = json.load(str(response.data, encoding="utf8"))
-	self.asssertEqual(response.status_code, 200)
-	self.assertEqual(response_to_dict, {})
-        confirm_in_db = self.app.get('{}/places/{}'.format(self.basepath, 
+        response_to_dict = json.load(str(response.data, encoding="utf-8"))
+        self.asssertEqual(response.status_code, 200)
+        self.assertEqual(response_to_dict, {})
+        confirm_in_db = self.app.get('{}/places/{}'.format(self.basepath,
                                                            new.id))
-	self.assertEqual(confirm_in_db.status_code, 404)
-	new.delete()
+        self.assertEqual(confirm_in_db.status_code, 404)
+        new.delete()
 
     def test_delete_id_fail(self):
         """test delete HTTP request"""
@@ -120,7 +121,8 @@ class Test_Place_API(unittest.TestCase):
         """test create HTTP request"""
         attr = {"city_id": "01", "description": "Yabadabadooh",
                 "id": "444", "user_id": "00"}
-        response = self.app.post('{}/cities/{}/places'.format(self.basepath),
+        response = self.app.post('{}/cities/{}/places'.format(self.basepath,
+                                                              cls.city.id),
                                  content_type="application/json",
                                  data=json.dumps(attr))
         response_to_dict = json.loads(str(response.data, encoding="utf-8"))
@@ -133,7 +135,8 @@ class Test_Place_API(unittest.TestCase):
     def test_create_place_by_city_id_fail_nouserID(self):
         """test create HTTP request"""
         attr = {"city_id": "01", "name": "Jojo", "id": "544"}
-        response = self.app.post('{}/cities/{}/places'.format(self.basepath),
+        response = self.app.post('{}/cities/{}/places'.format(self.basepath,
+                                                              cls.city.id),
                                  content_type="application/json",
                                  data=json.dumps(attr))
         response_to_dict = json.loads(str(response.data, encoding="utf-8"))
@@ -171,7 +174,7 @@ class Test_Place_API(unittest.TestCase):
         self.assertIn("Not a JSON", response_to_dict["error"])
         obj = storage.get("Place", new.id)
         self.assertNotEqual(obj.name, new_attr["name"])
-	self.assertEqual(obj.name, new["name"])
+        self.assertEqual(obj.name, new.name)
         new.delete()
 
     def test_update_id_fail_noplace(self):

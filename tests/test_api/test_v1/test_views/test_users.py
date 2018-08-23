@@ -31,7 +31,7 @@ class Test_User_API(unittest.TestCase):
         new_instance = User(**attr)
         new_instance.save()
         response = self.app.get("{}".format(self.basepath))
-        response_to_dict = json.load(str(response.data, encoding="utf8"))
+        response_to_dict = json.load(str(response.data), encoding="utf8")
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response_to_dict['__class__'], "User")
         self.assertEqual(response_to_dict['name'], new_instance['name'])
@@ -66,7 +66,7 @@ class Test_User_API(unittest.TestCase):
         new_instance.save()
         response = self.app.delete('{}/{}'.format(self.basepath,
                                    new_instance.id))
-        response_to_dict = json.load(str(response.data, encoding="utf8"))
+        response_to_dict = json.loads(str(response.data), encoding="utf-8")
         self.asssertEqual(response.status_code, 200)
         self.assertEqual(response_to_dict, {})
         confirm_in_db = self.app.get('{}/{}'.format(self.basepath, 
@@ -168,12 +168,12 @@ class Test_User_API(unittest.TestCase):
         self.assertIn("Not a JSON", response_to_dict["error"])
         obj = storage.get("User", new.id)
         self.assertNotEqual(obj.email, new_attr["email"])
-	self.assertEqual(obj.email, new["email"])
+        self.assertEqual(obj.email, new.email)
         new.delete()
 
     def test_update_id_fail_nouser(self):
         """test update HTTP request"""
-	pass
+        pass
 
 if __name__ == "__main__":
     unittest.main()
