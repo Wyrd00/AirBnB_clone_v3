@@ -68,7 +68,7 @@ class BaseModel:
         models.storage.new(self)
         models.storage.save()
 
-    def to_dict(self):
+    def to_dict(self, save_to_disk=False):
         '''
             Return dictionary representation of BaseModel class.
         '''
@@ -78,6 +78,8 @@ class BaseModel:
         cp_dct['created_at'] = self.created_at.strftime("%Y-%m-%dT%H:%M:%S.%f")
         if hasattr(self, "_sa_instance_state"):
             del cp_dct["_sa_instance_state"]
+        if not save_to_disk:
+            del cp_dict["password"]
         return (cp_dct)
 
     def delete(self):
