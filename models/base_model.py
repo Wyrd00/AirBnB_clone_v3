@@ -79,7 +79,7 @@ class BaseModel:
         if hasattr(self, "_sa_instance_state"):
             del cp_dct["_sa_instance_state"]
         if cp_dct['__class__'] is "User" and not save_to_disk:
-            del cp_dct["password"]
+            del cp_dct["_password"]
         return (cp_dct)
 
     def delete(self):
