@@ -96,7 +96,7 @@ class testFileStorage(unittest.TestCase):
 
         self.assertIsInstance(content, str)
 
-    def test_reaload_without_file(self):
+    def test_reload_without_file(self):
         '''
             Tests that nothing happens when file.json does not exists
             and reload is called
@@ -133,19 +133,9 @@ class testFileStorage(unittest.TestCase):
         '''
             Test to check if instance gotten for DBStorage
         '''
-        new_state = State(name="NewYork")
-        self.storage.new(new_state)
-        new_s_id = new_state.id
-        self.storage.save()
-        with self.assertRaises(TypeError):
-            self.storage.get("State")
-        fake_id = 0000
-        obj1 = self.storage.get("State", fake_id)
-        self.assertIsNone(obj1)
-        obj = storage.get("State", new_s_id)
-        self.assertEqual(obj.__class__.__name__, "State")
-        self.assertEqual(obj.name, "NewYork")
-        self.assertEqual(obj.id, new_s_id)
+        new_o = State(name="Cali")
+        obj = storage.get("State", "fake_id")
+        self.assertIsNone(obj)
 
     def test_fs_storage_count(self):
         '''
