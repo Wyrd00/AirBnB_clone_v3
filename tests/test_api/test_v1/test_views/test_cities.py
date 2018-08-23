@@ -32,20 +32,19 @@ class Test_City_API(unittest.TestCase):
     def test_get(self):
         """test get HTTP request"""
         attr = {"name": "Icy", "state_id": "FA"}
-        new_instance = City(**attr)
-        new_instance.save()
+        new01 = City(**attr)
+        new01.save()
         response = self.app.get('{}/states/{}/cities'.format(self.basepath,
                                                              self.state.id))
         self.assertEqual(response.status_code, 200)
         response_to_dict = json.loads(str(response.data, encoding="utf-8"))
         self.assertTrue(type(response_to_dict), list)
         self.assertEqual(response_to_dict[0]["__class__"], "City")
-        self.assertEqual(response_to_dict[0]["name"], attr["name"])
-        new_instance.delete()
+        new01.delete()
 
     def test_get_id(self):
         """test get HTTP request"""
-        attr = {"name": "San Fran"}
+        attr = {"name": "San Fran", "state_id": "FA"}
         new_c = City(**attr)
         new_c.save()
         response = self.app.get('{}/cities/{}'.format(self.basepath, new_c.id))
@@ -58,47 +57,43 @@ class Test_City_API(unittest.TestCase):
 
     def test_get_id_fail(self):
         """test get HTTP request"""
-        attr = {"name": "SF"}
-        new_instance = City(**attr)
-        new_instance.save()
         response = self.app.get('{}/cities/fake_id_123'.format(self.basepath))
         response_to_dict = json.loads(str(response.data, encoding="utf-8"))
         self.assertEqual(response.status_code, 404)
         self.assertIn("error", response_to_dict)
         self.assertIn("Not found", response_to_dict["error"])
-        new_instance.delete()
 
     def test_delete_id(self):
         """test delete HTTP request"""
-        attr = {"name": "SF"}
-        new_instance = City(**attr)
-        new_instance.save()
+        attr = {"name": "SF", "state_id": "FA"}
+        new_i = City(**attr)
+        new_i.save()
         response = self.app.delete('{}/cities/{}'.format(self.basepath,
-                                                         new_instance.id))
+                                                         new_i.id))
         response_to_dict = json.loads(str(response.data, encoding="utf-8"))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response_to_dict, {})
-        new_instance.delete()
+        new_i.delete()
 
     def test_delete_id_fail(self):
         """test delete HTTP request"""
-        attr = {"name": "SF"}
-        new_instance = City(**attr)
-        new_instance.save()
+        attr = {"name": "SF", "state_id": "FA"}
+        new_in = City(**attr)
+        new_in.save()
         response = self.app.delete('{}/cities/fake_id'.format(self.basepath))
         response_to_dict = json.loads(str(response.data, encoding="utf-8"))
         self.assertEqual(response.status_code, 404)
         self.assertIn("error", response_to_dict)
         self.assertIn("Not found", response_to_dict["error"])
-        obj = storage.get("City", new_instance.id)
+        obj = storage.get("City", new_in.id)
         self.assertIsNotNone(obj)
-        new_instance.delete()
+        new_in.delete()
 
     def test_create_id(self):
         """test create HTTP request"""
-        attr = {"name": "SF", "id": "666"}
-        new_instance = City(**attr)
-        new_instance.save()
+        attr = {"name": "SF", "id": "666", "state_id": "FA"}
+        new_ins = City(**attr)
+        new_ins.save()
         response = self.app.post('{}/states/{}/cities'.format(self.basepath,
                                                               self.state.id),
                                  content_type="application/json",
@@ -107,7 +102,7 @@ class Test_City_API(unittest.TestCase):
         self.assertEqual(response.status_code, 201)
         obj = storage.get("City", "666")
         self.assertIsNotNone(obj)
-        new_instance.delete()
+        new_ins.delete()
 
     def test_create_fail_nojson(self):
         """test create HTTP request"""
@@ -137,22 +132,22 @@ class Test_City_API(unittest.TestCase):
 
     def test_update_id(self):
         """test update HTTP request"""
-        attr = {"name": "FarAway"}
-        new = City(**attr)
-        new.save()
+        attr = {"name": "FarAway", "state_id": "FA"}
+        new007 = City(**attr)
+        new007.save()
         new_attr = {"name": "FarFarAway"}
-        response = self.app.put('{}/cities/{}'.format(self.basepath, new.id),
+        response = self.app.put('{}/cities/{}'.format(self.basepath, new007.id),
                                  content_type="application/json",
                                  data=json.dumps(new_attr))
         response_to_dict = json.loads(str(response.data, encoding="utf-8"))
         self.assertEqual(response.status_code, 200)
-        obj = storage.get("City", new.id)
+        obj = storage.get("City", new007.id)
         self.assertEqual(obj.name, new_attr["name"])
-        new.delete()
+        new007.delete()
 
     def test_update_id_fail_nojson(self):
         """test update HTTP request"""
-        attr = {"name": "FarAway"}
+        attr = {"name": "FarAway", "state_id": "FA"}
         new = City(**attr)
         new.save()
         new_attr = {"name": "FarFarAway"}
