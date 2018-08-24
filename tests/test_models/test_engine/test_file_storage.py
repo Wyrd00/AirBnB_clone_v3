@@ -131,7 +131,7 @@ class testFileStorage(unittest.TestCase):
 
     def test_fs_storage_get(self):
         '''
-            Test to check if instance gotten for DBStorage
+            Check if instance gotten for DBStorage
         '''
         new_o = State(name="Cali")
         obj = storage.get("State", "fake_id")
@@ -139,7 +139,7 @@ class testFileStorage(unittest.TestCase):
 
     def test_fs_storage_count(self):
         '''
-            Test to check total count of objs in DBStorage
+            Check total count of objs in DBStorage
         '''
         storage.reload()
         all_count = self.storage.count()

@@ -105,7 +105,7 @@ class DBStorage:
 
     def count(self, cls=None):
         '''
-            Count number of objects in DBstorage
+            Count num objects in DBstorage
         '''
         cls_counter = 0
 
