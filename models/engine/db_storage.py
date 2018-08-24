@@ -115,6 +115,6 @@ class DBStorage:
         else:
             for k, v in models.classes.items():
                 if k != "BaseModel":
-                    objs = self.__session.query(v).all()
+                    objs = self.__session.query(models.classes[k]).all()
                     cls_counter += len(objs)
         return cls_counter

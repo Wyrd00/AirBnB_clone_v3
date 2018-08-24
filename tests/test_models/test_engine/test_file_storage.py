@@ -141,7 +141,9 @@ class testFileStorage(unittest.TestCase):
         '''
             Test to check total count of objs in DBStorage
         '''
+        storage.reload()
         all_count = self.storage.count()
         self.assertIsInstance(all_count, int)
         cls_count = self.storage.count("State")
         self.assertIsInstance(cls_count, int)
+        self.assertGreaterEqual(all_count, cls_count)
