@@ -96,7 +96,7 @@ class FileStorage:
 
     def count(self, cls=None):
         '''
-            Count number of objects in FileStorage
+            Count num objects in FileStorage
         '''
         cls_counter = 0
 
